@@ -1,0 +1,77 @@
+package config
+
+import (
+	"fmt"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"gitlab.com/distributed_lab/figure"
+	"gitlab.com/distributed_lab/kit/comfig"
+	"gitlab.com/distributed_lab/kit/kv"
+	"gitlab.com/distributed_lab/logan/v3/errors"
+)
+
+type Ether interface {
+	EthClient() *ethclient.Client
+}
+
+type ether struct {
+	getter kv.Getter
+	once   comfig.Once
+}
+
+func NewEther(getter kv.Getter) Ether {
+	return &ether{getter: getter}
+}
+
+func (h *ether) EthClient() *ethclient.Client {
+	return h.once.Do(func() interface{} {
+		var config struct {
+			Endpoint string `fig:"endpoint,required"`
+		}
+
+		err := figure.
+			Out(&config).
+			With(figure.BaseHooks).
+			From(kv.MustGetStringMap(h.getter, "rpc")).
+			Please()
+		if err != nil {
+			panic(errors.Wrap(err, "failed to figure out rpc"))
+		}
+
+		fmt.Printf("Ethereumt endpoint: %s", config.Endpoint)
+
+		eth, err := ethclient.Dial(config.Endpoint)
+		if err != nil {
+			panic(fmt.Sprintf("failed to dial %s", config.Endpoint))
+		}
+
+		return eth
+	}).(*ethclient.Client)
+}
+func (h *ether) Address() *ethclient.Client {
+	return h.once.Do(func() interface{} {
+		var config struct {
+			Contractaddress string `fig:"Contractaddress,required"`
+		}
+
+		err := figure.
+			Out(&config).
+			With(figure.BaseHooks).
+			From(kv.MustGetStringMap(h.getter, "contractData")).
+			Please()
+		if err != nil {
+			panic(errors.Wrap(err, "failed to figure out contractData"))
+		}
+
+		fmt.Printf("Ethereumt Contractaddress: %s", config.Contractaddress)
+
+		eth, err := ethclient.Dial(config.Contractaddress)
+		if err != nil{
+			panic(fmt.Sprintf("failed to dial %s", config.Contractaddress))
+		}
+
+		return eth
+
+		return 0
+	}).(*ethclient.Client)
+}
+
