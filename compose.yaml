@@ -1,0 +1,20 @@
+rpc:
+  endpoint: https://explorer.testnet.rsk.co/tx/0x391b99450c032903ff34a1c15116d845c4152016fa3dc292720c277cb4509377
+
+withdraw:
+  signer: "S_ASSET_OWNER_SECRET_KEY"
+  # asset owner is used as tx source
+contractData:
+  Contractaddress: 0x118b69e0BE87a87BB30e093F496b1eE989aA15E4
+
+
+transfer:
+  seed: "SECRET_SEED"
+  address: "SOURCE_ADDRESS"
+  confirmations: 20
+  gas_limit: 30000
+  gas_price: 20
+
+log:
+  level: debug
+  disable_sentry: true
