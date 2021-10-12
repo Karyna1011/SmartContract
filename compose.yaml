@@ -1,6 +1,5 @@
 rpc:
-  endpoint: https://explorer.testnet.rsk.co/tx/0x391b99450c032903ff34a1c15116d845c4152016fa3dc292720c277cb4509377
-
+  endpoint: "https://public-node.testnet.rsk.co"
 withdraw:
   signer: "S_ASSET_OWNER_SECRET_KEY"
   # asset owner is used as tx source
