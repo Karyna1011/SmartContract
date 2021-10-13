@@ -2,7 +2,6 @@ package main
 
 import (
 	"awesomeProject/config"
-
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -10,29 +9,18 @@ import (
 	"gitlab.com/distributed_lab/kit/kv"
 	"gitlab.com/distributed_lab/logan/v3"
 	"io"
-	//"log"
 	"strings"
-	"time"
-	/*"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/crypto"*/)
+	"time")
 
 type Transformer interface {
 	Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)
 	Reset()
 }
 
-/*type SpanningTransformer interface {
-	Transformer
-	Span(src []byte, atEOF bool) (n int, err error)
-}*/
-
 type NopResetter struct{}
 
-// Reset implements the Reset method of the Transformer interface.
 func (NopResetter) Reset() {}
 
-// Reader wraps another io.Reader by transforming the bytes read.
 type Reader struct {
 	r                 io.Reader
 	t                 Transformer
@@ -58,7 +46,7 @@ func NewReader(r io.Reader, t Transformer) *Reader {
 
 const erc20ABI = "[{\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
-func MachenEtwas() {
+func CallFunction() {
 	cfg := config.NewConfig(kv.MustFromEnv())
 	eth := cfg.EthClient()
 
@@ -80,18 +68,18 @@ func MachenEtwas() {
 		eth,
 	)
 
-	vs := make([]interface{}, len(""))
+	result := make([]interface{}, len(""))
 	for i, e := range "" {
-		vs[i] = e
+		result[i] = e
 	}
 
-	err = Contract.Call(&bind.CallOpts{}, &vs, "get")
+	err = Contract.Call(&bind.CallOpts{}, &result, "get")
 	if err != nil {
 		log.WithError(err).Error("error during calling contract")
 		return
 	}
 
-	fmt.Println("RESULT:", vs)
+	fmt.Println("RESULT:", result)
 }
 
 func main() {
@@ -100,8 +88,7 @@ func main() {
 	for {
 		select {
 		case tm := <-d.C:
-			//MakeTransaction()
-			MachenEtwas()
+			CallFunction()
 			fmt.Println("The Current time is: ", tm)
 			d.Reset(3 * time.Second)
 
