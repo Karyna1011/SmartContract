@@ -12,37 +12,7 @@ import (
 	"strings"
 	"time")
 
-type Transformer interface {
-	Transform(dst, src []byte, atEOF bool) (nDst, nSrc int, err error)
-	Reset()
-}
 
-type NopResetter struct{}
-
-func (NopResetter) Reset() {}
-
-type Reader struct {
-	r                 io.Reader
-	t                 Transformer
-	err               error
-	dst               []byte
-	dst0, dst1        int
-	src               []byte
-	src0, src1        int
-	transformComplete bool
-}
-
-const defaultBufSize = 4096
-
-func NewReader(r io.Reader, t Transformer) *Reader {
-	t.Reset()
-	return &Reader{
-		r:   r,
-		t:   t,
-		dst: make([]byte, defaultBufSize),
-		src: make([]byte, defaultBufSize),
-	}
-}
 
 const erc20ABI = "[{\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"
 
